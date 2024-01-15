@@ -1,118 +1,119 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import styled from 'styled-components/native';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+const Container = styled.View`
+  flex: 1;
+  justify-content: flex-end;
+  background-color: #000;
+`;
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const ResultText = styled.Text`
+  font-size: 40px;
+  color: #fff;
+  margin: 10px;
+  text-align: right;
+`;
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+const ButtonsContainer = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 10px; /* Thêm padding để tạo khoảng cách giữa nút C và các nút khác */
+`;
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+const NumberButtonsContainer = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+`;
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+const Button = styled.TouchableOpacity`
+  width: 25%;
+  height: 80px;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f8f8;
+  border-width: 1px;
+  border-color: #ccc;
+`;
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+const ButtonText = styled.Text`
+  font-size: 24px;
+  color: #333;
+`;
+
+const App = () => {
+  const [result, setResult] = useState('');
+
+  const handlePress = (value) => {
+    setResult(result + value);
   };
 
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
+  const handleCalculate = () => {
+    try {
+      setResult(eval(result).toString());
+    } catch (error) {
+      setResult('Error');
+    }
+  };
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+  const handleClear = () => {
+    setResult('');
+  };
+  const handleToggleSign = () => {
+    // Kiểm tra xem kí tự đầu tiên có phải là dấu trừ không
+    if (result.length > 0 && result[0] === '-') {
+      // Nếu có, loại bỏ dấu trừ để chuyển thành số dương
+      setResult(result.slice(1));
+    } else {
+      // Nếu không, thêm dấu trừ để chuyển thành số âm
+      setResult('-' + result);
+    }
+  };
+  const handlePercentage = () => {
+    if (result !== '') {
+      const numericResult = parseFloat(result);
+      const percentageResult = (numericResult / 100).toString();
+      setResult(percentageResult);
+    }
+  };
+  
+  return (
+    <Container>
+      <ResultText>{result}</ResultText>
+    
+      <ButtonsContainer>
+        <Button onPress={handleClear}>
+          <ButtonText>C</ButtonText>
+        </Button>
+        <Button onPress={handleToggleSign}>
+          <ButtonText>+/-</ButtonText>
+        </Button>
+        <Button onPress={handlePercentage}>
+          <ButtonText>%</ButtonText>
+        </Button>
+        {[  '÷ ', '7', '8'].map((button) => (
+          <Button key={button} onPress={() => handlePress(button)}>
+            <ButtonText>{button}</ButtonText>
+          </Button>
+        ))}
+        {['9', 'X', '4', '5'].map((button) => (
+          <Button key={button} onPress={() => handlePress(button)}>
+            <ButtonText>{button}</ButtonText>
+          </Button>
+        ))}
+        {['6', '-', '1', '2'].map((button) => (
+          <Button key={button} onPress={() => handlePress(button)}>
+            <ButtonText>{button}</ButtonText>
+          </Button>
+        ))}
+        {['3', '+', '0', '.','='].map((button) => (
+          <Button key={button} onPress={() => (button === '=' ? handleCalculate() : handlePress(button))}>
+            <ButtonText>{button}</ButtonText>
+          </Button>
+        ))}
+      </ButtonsContainer>
+    </Container>
+  );
+};
 
 export default App;
