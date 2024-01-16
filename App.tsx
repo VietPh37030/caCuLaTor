@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
 import styled from 'styled-components/native';
 
 const Container = styled.View`
@@ -13,12 +13,13 @@ const ResultText = styled.Text`
   color: #fff;
   margin: 10px;
   text-align: right;
+  
 `;
 
 const ButtonsContainer = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
-  padding: 10px; /* Thêm padding để tạo khoảng cách giữa nút C và các nút khác */
+
 `;
 
 const NumberButtonsContainer = styled.View`
@@ -27,24 +28,43 @@ const NumberButtonsContainer = styled.View`
 `;
 
 const Button = styled.TouchableOpacity`
-  width: 25%;
+  width: 24%;
   height: 80px;
   align-items: center;
   justify-content: center;
-  background-color: #f8f8f8;
+  background-color: #333333;
   border-width: 1px;
   border-color: #ccc;
+  border-radius: 60px;
+ margin-top:10px;
+ margin-left:3px;
 `;
 
 const ButtonText = styled.Text`
   font-size: 24px;
-  color: #333;
+  color: #fffdcc;
+  align-items: center;
 `;
+const ButtonTextC = styled.Text`
+  font-size: 24px;
+  color:#060606;
+  align-items: center;
+`;
+const LogoContainer = styled.View`
+  position: absolute;
+  top: 10px; /* Đặt ở trên cùng của màn hình */
+  left: 10px; /* Đặt ở góc trái của màn hình */
+`;
+const LogoText = styled.Text`
+  font-size: 18px;
+  color: #fff;
+`;
+// ... (phần còn lại của mã)
 
 const App = () => {
   const [result, setResult] = useState('');
 
-  const handlePress = (value) => {
+  const handlePress = value => {
     setResult(result + value);
   };
 
@@ -59,16 +79,15 @@ const App = () => {
   const handleClear = () => {
     setResult('');
   };
+
   const handleToggleSign = () => {
-    // Kiểm tra xem kí tự đầu tiên có phải là dấu trừ không
     if (result.length > 0 && result[0] === '-') {
-      // Nếu có, loại bỏ dấu trừ để chuyển thành số dương
       setResult(result.slice(1));
     } else {
-      // Nếu không, thêm dấu trừ để chuyển thành số âm
       setResult('-' + result);
     }
   };
+
   const handlePercentage = () => {
     if (result !== '') {
       const numericResult = parseFloat(result);
@@ -76,38 +95,104 @@ const App = () => {
       setResult(percentageResult);
     }
   };
-  
+  const YellowButtonX = styled(TouchableOpacity)`
+  width: 24%;
+  height: 80px;
+  align-items: center;
+  justify-content: center;
+  background-color: #ff9f08;
+  border-width: 1px;
+  border-color: #000;
+  border-radius: 60px;
+  margin-top: 10px;
+  margin-left:3px;
+`;
+const GrayButtonX = styled(TouchableOpacity)`
+width: 24%;
+height: 80px;
+  align-items: center;
+  justify-content: center;
+  background-color: #a5a5a5;
+  border-width: 1px;
+  border-color: #000;
+  border-radius: 60px;
+  margin-top: 10px;
+  margin-left:3px;
+`;
+const ZeroButton = styled(TouchableOpacity)`
+  width: 49%; /* Điều chỉnh kích thước cho số 0 */
+  height: 80px;
+  align-items: center;
+  justify-content: center;
+  background-color: #333333;
+  border-width: 1px;
+  border-color: #ccc;
+  border-radius: 60px;
+  margin-top: 10px;
+  padding-right: 80px;
+  margin-left:3px;
+`;
   return (
     <Container>
+      <LogoContainer>
+        <LogoText>Phạm Việt Anh-PH37030</LogoText>
+      </LogoContainer>
       <ResultText>{result}</ResultText>
-    
+
       <ButtonsContainer>
-        <Button onPress={handleClear}>
-          <ButtonText>C</ButtonText>
-        </Button>
-        <Button onPress={handleToggleSign}>
-          <ButtonText>+/-</ButtonText>
-        </Button>
-        <Button onPress={handlePercentage}>
-          <ButtonText>%</ButtonText>
-        </Button>
-        {[  '÷ ', '7', '8'].map((button) => (
+        <GrayButtonX onPress={handleClear}>
+          <ButtonTextC>C</ButtonTextC>
+        </GrayButtonX>
+        {/* <GrayButtonX onPress={handleToggleSign}>
+          <ButtonTextC>+/-</ButtonTextC>
+        </GrayButtonX> */}
+        <GrayButtonX onPress={handleClear}>
+          <ButtonTextC>D</ButtonTextC>
+        </GrayButtonX>
+        <GrayButtonX onPress={handlePercentage}>
+          <ButtonTextC>%</ButtonTextC>
+        </GrayButtonX>
+        {/* Thêm nút 'X' màu vàng */}
+        <YellowButtonX onPress={() => handlePress('÷')}>
+          <ButtonText>÷</ButtonText>
+        </YellowButtonX>
+        {[ '7', '8','9'].map(button => (
           <Button key={button} onPress={() => handlePress(button)}>
             <ButtonText>{button}</ButtonText>
           </Button>
         ))}
-        {['9', 'X', '4', '5'].map((button) => (
+        {/* Thêm nút 'X' màu vàng */}
+        <YellowButtonX onPress={() => handlePress('X')}>
+          <ButtonText>X</ButtonText>
+        </YellowButtonX>
+        {['4', '5','6'].map(button => (
           <Button key={button} onPress={() => handlePress(button)}>
             <ButtonText>{button}</ButtonText>
           </Button>
         ))}
-        {['6', '-', '1', '2'].map((button) => (
+         {/* Thêm nút '-' màu vàng */}
+         <YellowButtonX onPress={() => handlePress('-')}>
+          <ButtonText>-</ButtonText>
+        </YellowButtonX>
+        {[ '1', '2','3',].map(button => (
           <Button key={button} onPress={() => handlePress(button)}>
             <ButtonText>{button}</ButtonText>
           </Button>
         ))}
-        {['3', '+', '0', '.','='].map((button) => (
-          <Button key={button} onPress={() => (button === '=' ? handleCalculate() : handlePress(button))}>
+        {/* Thêm nút '-' màu vàng */}
+        <YellowButtonX onPress={() => handlePress('+')}>
+          <ButtonText>+</ButtonText>
+        </YellowButtonX>
+         {/* Thêm nút 0 màu vàng */}
+         <ZeroButton onPress={() => handlePress('0')}>
+          <ButtonText>0</ButtonText>
+        </ZeroButton>
+        {[ '.', '='].map(button => (
+          <Button
+            key={button}
+            onPress={() =>
+              button === '=' ? handleCalculate() : handlePress(button)
+            }>
             <ButtonText>{button}</ButtonText>
           </Button>
         ))}
@@ -117,3 +202,4 @@ const App = () => {
 };
 
 export default App;
+
